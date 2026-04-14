@@ -37,6 +37,3 @@ All patient health data — including medical records, diagnoses, and prescripti
 - Email and SMS appointment reminders
 - Role-based access control (patient, doctor, nurse, receptionist, admin)
 
-## Stack
-
-Built with **Django** and **PostgreSQL** on the backend, with a **Next.js** frontend.
