@@ -1,4 +1,4 @@
-# Hospital Management Platform
+# Hospital Management Platform with AI chatbot
 
 ---
 
@@ -29,10 +29,10 @@ All patient health data — including medical records, diagnoses, and prescripti
 
 ## Core features
 
+- AI chatbot for symptom triage and appointment booking
 - Secure patient registration and health profiles
 - Encrypted medical records, prescriptions, and lab results
 - Real-time appointment scheduling with doctor availability
-- AI chatbot for symptom triage and appointment booking
 - Doctor dashboard with patient queue and consultation notes
 - Admin panel for staff, department, and billing management
 - Email and SMS appointment reminders
