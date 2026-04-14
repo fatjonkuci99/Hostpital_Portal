@@ -10,8 +10,7 @@
 | Database | PostgreSQL 16 |
 | Auth | JWT (SimpleJWT) + TOTP MFA |
 | Encryption | Fernet / AES-128 (field-level) |
-| Async Tasks |  Celery + Redis |
-| Frontend | Next.js (minimal) |
+
 
 ---
 
