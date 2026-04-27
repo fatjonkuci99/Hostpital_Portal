@@ -1,0 +1,112 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Appointments — Doctor Portal{% endblock %}
+{% block page_title %}Appointments{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <span class="icon"></span>
+    <span>Hospital Platform</span>
+  </div>
+  <div class="sidebar-role">Doctor Portal</div>
+
+  <a class="nav-item" href="/dashboard/">
+    <span class="nav-icon"></span> Overview
+  </a>
+  <a class="nav-item active" href="/doctor/appointments/">
+    <span class="nav-icon"></span> Appointments
+  </a>
+
+  <div class="sidebar-bottom">
+    <a class="nav-item" href="/logout/">
+      <span class="nav-icon"></span> Sign Out
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<!-- Pending approval -->
+<div class="section-card" style="margin-bottom:24px;">
+  <div class="section-header">
+    Pending Approval
+    {% if pending %}
+      <span class="badge badge-orange">{{ pending|length }}</span>
+    {% endif %}
+  </div>
+  <div class="section-body" style="padding:0;">
+    {% if not pending %}
+      <div style="padding:32px;text-align:center;color:var(--muted);">No pending requests.</div>
+    {% else %}
+      <table>
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Date & Time</th>
+            <th>Reason</th>
+            <th>Requested</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in pending %}
+          <tr>
+            <td><strong>{{ appt.patient.full_name }}</strong></td>
+            <td>{{ appt.date_time|date:"j M Y — H:i" }}</td>
+            <td style="color:var(--muted);">{{ appt.reason }}</td>
+            <td style="color:var(--muted);font-size:0.85rem;">{{ appt.created_at|date:"j M Y" }}</td>
+            <td>
+              <div style="display:flex;gap:8px;">
+                <form method="POST" action="/doctor/appointments/{{ appt.pk }}/approve/">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary btn-sm">Approve</button>
+                </form>
+                <form method="POST" action="/doctor/appointments/{{ appt.pk }}/decline/"
+                      onsubmit="return confirm('Decline this appointment?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline btn-sm">Decline</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Upcoming confirmed -->
+<div class="section-card">
+  <div class="section-header">Upcoming Confirmed Appointments</div>
+  <div class="section-body" style="padding:0;">
+    {% if not upcoming %}
+      <div style="padding:32px;text-align:center;color:var(--muted);">No upcoming appointments.</div>
+    {% else %}
+      <table>
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Date & Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in upcoming %}
+          <tr>
+            <td><strong>{{ appt.patient.full_name }}</strong></td>
+            <td>{{ appt.date_time|date:"j M Y — H:i" }}</td>
+            <td style="color:var(--muted);">{{ appt.reason }}</td>
+            <td><span class="badge badge-green">Confirmed</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

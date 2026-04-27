@@ -1,0 +1,143 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Patient Dashboard — Hospital Platform{% endblock %}
+{% block page_title %}My Health Dashboard{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <span class="icon"></span>
+    <span>Hospital Platform</span>
+  </div>
+  <div class="sidebar-role">Patient Portal</div>
+
+  <a class="nav-item active" href="#">
+    <span class="nav-icon"></span> Overview
+  </a>
+  <a class="nav-item" href="/book/">
+    <span class="nav-icon"></span> Book Appointment
+  </a>
+  <a class="nav-item" href="/appointments/">
+    <span class="nav-icon"></span> My Appointments
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Medical Records
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Prescriptions
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Symptom Checker
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> My Profile
+  </a>
+
+  <div class="sidebar-bottom">
+    <a class="nav-item" href="/logout/">
+      <span class="nav-icon"></span> Sign Out
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="greeting">
+  <h2>Good morning, {{ user.first_name }} </h2>
+  <p>Here's a summary of your health activity.</p>
+</div>
+
+<!-- Stats row -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Upcoming Appointments</div>
+    <div class="stat-value">2</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Medical Records</div>
+    <div class="stat-value">8</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Active Prescriptions</div>
+    <div class="stat-value">3</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Last Visit</div>
+    <div class="stat-value" style="font-size:1.1rem;margin-top:4px;">Apr 2</div>
+  </div>
+</div>
+
+<!-- Upcoming appointments -->
+<div class="section-card">
+  <div class="section-header">
+    Upcoming Appointments
+    <button class="btn btn-primary btn-sm">+ Book Appointment</button>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr>
+          <th>Doctor</th><th>Specialty</th><th>Date & Time</th><th>Status</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Dr. Sarah Mitchell</strong></td>
+          <td>Cardiology</td>
+          <td>Apr 18, 2026 — 10:30 AM</td>
+          <td><span class="badge badge-green">Confirmed</span></td>
+          <td><button class="btn btn-outline btn-sm">Reschedule</button></td>
+        </tr>
+        <tr>
+          <td><strong>Dr. James Okafor</strong></td>
+          <td>General Practice</td>
+          <td>Apr 25, 2026 — 02:00 PM</td>
+          <td><span class="badge badge-orange">Pending</span></td>
+          <td><button class="btn btn-outline btn-sm">Reschedule</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Recent records -->
+<div class="section-card">
+  <div class="section-header">
+    Recent Medical Records
+    <a href="#" style="font-size:0.85rem;color:#2980b9;text-decoration:none;">View all →</a>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Doctor</th><th>Date</th><th>Summary</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-blue">Diagnosis</span></td>
+          <td>Dr. Sarah Mitchell</td>
+          <td>Apr 2, 2026</td>
+          <td>Hypertension — stage 1. Follow-up in 6 weeks.</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">Lab Result</span></td>
+          <td>Lab Department</td>
+          <td>Mar 28, 2026</td>
+          <td>Full blood count — within normal range.</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-orange">Prescription</span></td>
+          <td>Dr. Sarah Mitchell</td>
+          <td>Mar 15, 2026</td>
+          <td>Amlodipine 5mg — once daily.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}{% endblock %}

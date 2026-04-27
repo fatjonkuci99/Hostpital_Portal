@@ -1,0 +1,158 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Book — Dr. {{ doctor.full_name }}{% endblock %}
+{% block page_title %}Book an Appointment{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <span class="icon"></span>
+    <span>Hospital Platform</span>
+  </div>
+  <div class="sidebar-role">Patient Portal</div>
+
+  <a class="nav-item" href="/dashboard/">
+    <span class="nav-icon"></span> Overview
+  </a>
+  <a class="nav-item active" href="/book/">
+    <span class="nav-icon"></span> Book Appointment
+  </a>
+  <a class="nav-item" href="/appointments/">
+    <span class="nav-icon"></span> My Appointments
+  </a>
+
+  <div class="sidebar-bottom">
+    <a class="nav-item" href="/logout/">
+      <span class="nav-icon"></span> Sign Out
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+
+<div style="margin-bottom:20px;">
+  <a href="/book/" style="font-size:0.88rem;color:var(--primary-light);text-decoration:none;">← Back to doctors</a>
+</div>
+
+<!-- Doctor info -->
+<div class="section-card" style="margin-bottom:24px;">
+  <div class="section-body" style="display:flex;align-items:center;gap:18px;">
+    <div class="avatar" style="width:56px;height:56px;font-size:1.3rem;flex-shrink:0;">
+      {{ doctor.first_name|first|upper }}
+    </div>
+    <div>
+      <div style="font-weight:700;font-size:1.1rem;">Dr. {{ doctor.full_name }}</div>
+      <div style="font-size:0.85rem;color:var(--primary-light);font-weight:600;">
+        {{ specialty|default:"General Practice" }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Date picker -->
+<div class="section-card" style="margin-bottom:24px;">
+  <div class="section-header">Select a Date</div>
+  <div class="section-body">
+    <form method="GET" action="/book/{{ doctor.id }}/" id="date-form">
+      <input type="text" id="date-picker" name="date" placeholder="Click to pick a date…"
+             value="{% if selected_date %}{{ selected_date|date:'Y-m-d' }}{% endif %}"
+             style="width:100%;max-width:320px;padding:10px 14px;border:1.5px solid var(--border);
+                    border-radius:8px;font-size:0.95rem;background:#f8fafc;outline:none;cursor:pointer;"/>
+    </form>
+  </div>
+</div>
+
+{% if error %}
+  <div style="background:#fdecea;color:#c0392b;border:1px solid #f5b7b1;padding:12px 16px;
+              border-radius:8px;margin-bottom:20px;font-size:0.9rem;">
+    {{ error }}
+  </div>
+{% endif %}
+
+<!-- Available slots -->
+{% if selected_date and available_slots %}
+<div class="section-card">
+  <div class="section-header">
+    Available Slots — {{ selected_date|date:"l, j F Y" }}
+  </div>
+  <div class="section-body">
+    <form method="POST" action="/book/{{ doctor.id }}/">
+      {% csrf_token %}
+      <input type="hidden" name="date" value="{{ selected_date|date:'Y-m-d' }}"/>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:24px;">
+        {% for slot in available_slots %}
+        <label style="cursor:pointer;">
+          <input type="radio" name="slot" value="{{ slot|date:'Y-m-d H:i:s' }}" required
+                 style="display:none;" class="slot-radio"/>
+          <div class="slot-btn">{{ slot|date:"H:i" }}</div>
+        </label>
+        {% endfor %}
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <label style="display:block;font-size:0.8rem;font-weight:600;color:#2c3e50;
+                      margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;">
+          Reason for visit
+        </label>
+        <input type="text" name="reason" placeholder="e.g. Annual check-up, follow-up…"
+               style="width:100%;padding:11px 14px;border:1.5px solid var(--border);
+                      border-radius:8px;font-size:0.95rem;background:#f8fafc;outline:none;"/>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Confirm Booking</button>
+    </form>
+  </div>
+</div>
+{% elif selected_date and not error %}
+  <div style="text-align:center;padding:40px;color:var(--muted);">
+    No available slots on this date.
+  </div>
+{% endif %}
+
+<style>
+  .slot-btn {
+    text-align: center;
+    padding: 10px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    background: #f8fafc;
+    transition: all 0.15s;
+  }
+  .slot-btn:hover { border-color: var(--primary-light); color: var(--primary); background: #eaf4fb; }
+  .slot-radio:checked + .slot-btn {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .flatpickr-day.flatpickr-disabled {
+    color: #ccc !important;
+    background: #f5f5f5 !important;
+    cursor: not-allowed !important;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  const availableWeekdays = {{ available_weekdays_js }};
+
+  flatpickr('#date-picker', {
+    minDate: 'today',
+    dateFormat: 'Y-m-d',
+    disableMobile: true,
+    disable: [
+      function(d) {
+        return !availableWeekdays.includes(d.getDay());
+      }
+    ],
+    onChange: function(selectedDates, dateStr) {
+      document.getElementById('date-form').submit();
+    }
+  });
+</script>
+{% endblock %}

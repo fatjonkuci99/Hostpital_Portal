@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>City Hospital — Quality Care for Everyone</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:       #1a5276;
+      --primary-light: #2980b9;
+      --accent:        #1abc9c;
+      --text:          #1c2833;
+      --muted:         #5d6d7e;
+      --bg:            #f0f4f8;
+      --white:         #ffffff;
+      --border:        #dce1e7;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: var(--text);
+      background: var(--white);
+    }
+
+    /* ─── NAV ─────────────────────────────────────────────── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      margin-right: auto;
+    }
+    .nav-logo .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .nav-logo .logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.1;
+    }
+    .nav-logo .logo-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-weight: 400;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+    .nav-links a {
+      display: block;
+      padding: 8px 16px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      border-radius: 7px;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-links a:hover {
+      background: var(--bg);
+      color: var(--primary);
+    }
+
+    /* Login button style */
+    .nav-links .nav-login a {
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      padding: 8px 20px;
+    }
+    .nav-links .nav-login a:hover {
+      background: var(--primary-light);
+      color: white;
+    }
+
+    /* ─── Menu dropdown ─── */
+    .nav-menu {
+      position: relative;
+    }
+    .nav-menu > button {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-menu > button:hover,
+    .nav-menu.open > button {
+      background: var(--bg);
+      border-color: var(--primary-light);
+      color: var(--primary);
+    }
+    .nav-menu > button .chevron {
+      font-size: 0.65rem;
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+    .nav-menu.open > button .chevron { transform: rotate(180deg); }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      min-width: 220px;
+      overflow: hidden;
+      z-index: 300;
+    }
+    .nav-menu.open .dropdown { display: block; }
+    .dropdown a {
+      display: block;
+      padding: 11px 18px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.91rem;
+      transition: background 0.12s;
+    }
+    .dropdown a:hover { background: var(--bg); color: var(--primary); }
+    .dropdown a + a { border-top: 1px solid var(--border); }
+
+    /* ─── HERO ────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #1a5276 0%, #1f618d 55%, #2471a3 100%);
+      color: white;
+      padding: 90px 32px 80px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 5px 16px;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 18px;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      max-width: 580px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-hero-primary {
+      padding: 13px 30px;
+      background: white;
+      color: var(--primary);
+      border: none;
+      border-radius: 8px;
+      font-size: 0.97rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+    .btn-hero-outline {
+      padding: 13px 30px;
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.6);
+      border-radius: 8px;
+      font-size: 0.97rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-hero-outline:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: white;
+    }
+
+    /* ─── STATS BAR ───────────────────────────────────────── */
+    .stats-bar {
+      background: var(--primary);
+      padding: 28px 32px;
+    }
+    .stats-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .stat-item {
+      text-align: center;
+      color: white;
+      padding: 0 20px;
+      border-right: 1px solid rgba(255,255,255,0.18);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-item .num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-item .lbl {
+      font-size: 0.8rem;
+      opacity: 0.75;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── SECTIONS ────────────────────────────────────────── */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 72px 32px;
+    }
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary-light);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.97rem;
+      line-height: 1.7;
+      max-width: 560px;
+      margin-bottom: 42px;
+    }
+
+    /* Departments grid */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .dept-card {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 28px 24px;
+      text-align: center;
+      border: 1.5px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text);
+      display: block;
+    }
+    .dept-card:hover {
+      border-color: var(--primary-light);
+      box-shadow: 0 6px 20px rgba(41,128,185,0.12);
+      transform: translateY(-3px);
+    }
+    .dept-card .dept-icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .dept-card .dept-name { font-weight: 700; font-size: 0.97rem; margin-bottom: 6px; }
+    .dept-card .dept-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+    /* Doctors grid */
+    .section-alt { background: var(--bg); }
+    .section-alt .section { padding: 72px 32px; }
+
+    .doctors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .doctor-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 28px 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .doctor-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    }
+    .doctor-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      margin: 0 auto 16px;
+    }
+    .doctor-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .doctor-spec { font-size: 0.83rem; color: var(--primary-light); font-weight: 600; margin-bottom: 8px; }
+    .doctor-bio  { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+    /* Tech section */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .tech-card {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .tech-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .tech-info .tech-name { font-weight: 700; font-size: 0.97rem; margin-bottom: 6px; }
+    .tech-info .tech-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+
+    /* ─── CTA ────────────────────────────────────────────── */
+    .cta-section {
+      background: linear-gradient(135deg, #1a5276, #2471a3);
+      color: white;
+      text-align: center;
+      padding: 72px 32px;
+    }
+    .cta-section h2 { font-size: 2rem; font-weight: 800; margin-bottom: 14px; }
+    .cta-section p  { font-size: 1rem; opacity: 0.85; margin-bottom: 32px; }
+
+    /* ─── FOOTER ──────────────────────────────────────────── */
+    footer {
+      background: #111c26;
+      color: rgba(255,255,255,0.65);
+      padding: 48px 32px 28px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 36px;
+    }
+    .footer-brand .brand-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .footer-brand p { font-size: 0.85rem; line-height: 1.7; }
+    .footer-col h4 { color: white; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+    .footer-col a  { display: block; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.85rem; margin-bottom: 8px; transition: color 0.15s; }
+    .footer-col a:hover { color: white; }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 22px;
+      font-size: 0.82rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+      .stat-item { border-right: none; }
+      .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { gap: 2px; }
+      .nav-links a { padding: 7px 10px; font-size: 0.85rem; }
+      .nav-links .nav-login a { padding: 7px 14px; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .hero { padding: 60px 20px 50px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ─────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="logo-icon"></div>
+      <div class="logo-text">
+        City Hospital
+        <span class="logo-sub">Quality Care for Everyone</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#departments">Departments</a></li>
+      <li><a href="#doctors">Doctors</a></li>
+      <li><a href="#technologies">Medical Technologies</a></li>
+      <li class="nav-login"><a href="/login/">Login</a></li>
+      <li class="nav-menu" id="navMenu">
+        <button onclick="toggleMenu()" aria-haspopup="true">
+          Menu <span class="chevron">&#9660;</span>
+        </button>
+        <div class="dropdown" role="menu">
+          <a href="#patient-rights">Patient Rights</a>
+          <a href="#news">News</a>
+          <a href="#videos">Videos</a>
+          <a href="#contracted-institutions">Contracted Institutions</a>
+          <a href="#our-goals">Our Goals</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ─── HERO ───────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-tag">Accredited since 1987</div>
+  <h1>Advanced Medical Care,<br>Closer to You</h1>
+  <p>City Hospital combines cutting-edge medical technology with compassionate, patient-centred care across 20+ specialties.</p>
+  <div class="hero-btns">
+    <a href="/login/" class="btn-hero-primary">Book an Appointment</a>
+    <a href="#departments" class="btn-hero-outline">Explore Departments</a>
+  </div>
+</section>
+
+<!-- ─── STATS BAR ──────────────────────────────────────────────────── -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="num">350+</div>
+      <div class="lbl">Medical Staff</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">20+</div>
+      <div class="lbl">Departments</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">50k</div>
+      <div class="lbl">Patients / Year</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">37</div>
+      <div class="lbl">Years of Service</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── DEPARTMENTS ────────────────────────────────────────────────── -->
+<section id="departments">
+  <div class="section">
+    <div class="section-label">Our Departments</div>
+    <div class="section-title">Comprehensive Care<br>Under One Roof</div>
+    <div class="section-desc">Our specialist departments are equipped with the latest technology and staffed by experienced medical professionals dedicated to your health.</div>
+
+    <div class="dept-grid">
+      <a class="dept-card" href="#">
+        <div class="dept-icon"></div>
+        <div class="dept-name">Cardiology</div>
+        <div class="dept-desc">Heart disease diagnosis and treatment, interventional procedures.</div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-icon"></div>
+        <div class="dept-name">Neurology</div>
+        <div class="dept-desc">Brain, spinal cord, and nervous system disorders.</div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-icon"></div>
+        <div class="dept-name">Orthopaedics</div>
+        <div class="dept-desc">Bone, joint, and musculoskeletal conditions and surgery.</div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-icon"></div>
+        <div class="dept-name">Paediatrics</div>
+        <div class="dept-desc">Specialised healthcare for infants, children, and adolescents.</div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-icon"></div>
+        <div class="dept-name">Oncology</div>
+        <div class="dept-desc">Comprehensive cancer diagnosis, treatment, and support.</div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-icon"></div>
+        <div class="dept-name">General Medicine</div>
+        <div class="dept-desc">Primary care, preventive health, and chronic disease management.</div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-icon"></div>
+        <div class="dept-name">Ophthalmology</div>
+        <div class="dept-desc">Eye health, vision correction, and surgical treatment.</div>
+      </a>
+      <a class="dept-card" href="#">
+        <div class="dept-icon"></div>
+        <div class="dept-name">Pulmonology</div>
+        <div class="dept-desc">Respiratory conditions, lung disease, and sleep disorders.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DOCTORS ────────────────────────────────────────────────────── -->
+<div class="section-alt">
+  <section id="doctors">
+    <div class="section">
+      <div class="section-label">Our Team</div>
+      <div class="section-title">Meet Our Doctors</div>
+      <div class="section-desc">Our physicians bring decades of experience and a commitment to evidence-based medicine across every discipline.</div>
+
+      <div class="doctors-grid">
+        <div class="doctor-card">
+          <div class="doctor-avatar">SM</div>
+          <div class="doctor-name">Dr. Sarah Mitchell</div>
+          <div class="doctor-spec">Cardiology</div>
+          <div class="doctor-bio">Board-certified cardiologist with 18 years of experience in interventional procedures.</div>
+        </div>
+        <div class="doctor-card">
+          <div class="doctor-avatar">JO</div>
+          <div class="doctor-name">Dr. James Okafor</div>
+          <div class="doctor-spec">General Practice</div>
+          <div class="doctor-bio">Primary care physician focused on preventive medicine and chronic disease management.</div>
+        </div>
+        <div class="doctor-card">
+          <div class="doctor-avatar">EV</div>
+          <div class="doctor-name">Dr. Elena Vasquez</div>
+          <div class="doctor-spec">Neurology</div>
+          <div class="doctor-bio">Specialist in stroke, epilepsy, and neurodegenerative disease with a research background.</div>
+        </div>
+        <div class="doctor-card">
+          <div class="doctor-avatar">RL</div>
+          <div class="doctor-name">Dr. Robert Liu</div>
+          <div class="doctor-spec">Orthopaedics</div>
+          <div class="doctor-bio">Expert in minimally invasive joint replacement and sports injury rehabilitation.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ─── MEDICAL TECHNOLOGIES ───────────────────────────────────────── -->
+<section id="technologies">
+  <div class="section">
+    <div class="section-label">Innovation in Care</div>
+    <div class="section-title">Medical Technologies</div>
+    <div class="section-desc">We invest continuously in state-of-the-art equipment so our clinicians can diagnose faster and treat more effectively.</div>
+
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-icon"></div>
+        <div class="tech-info">
+          <div class="tech-name">3T MRI Scanner</div>
+          <div class="tech-desc">High-field magnetic resonance imaging for detailed soft-tissue diagnosis without radiation.</div>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon"></div>
+        <div class="tech-info">
+          <div class="tech-name">64-Slice CT Scanner</div>
+          <div class="tech-desc">Rapid, high-resolution cross-sectional imaging for cardiac, vascular, and oncological assessment.</div>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon"></div>
+        <div class="tech-info">
+          <div class="tech-name">Robotic Surgery System</div>
+          <div class="tech-desc">Minimally invasive robotic-assisted surgery for precision, reduced blood loss, and faster recovery.</div>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon"></div>
+        <div class="tech-info">
+          <div class="tech-name">Digital Pathology</div>
+          <div class="tech-desc">Whole-slide imaging and AI-assisted analysis for rapid, accurate laboratory diagnosis.</div>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon"></div>
+        <div class="tech-info">
+          <div class="tech-name">Linear Accelerator (LINAC)</div>
+          <div class="tech-desc">Precision radiotherapy for cancer treatment, targeting tumours while protecting healthy tissue.</div>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon"></div>
+        <div class="tech-info">
+          <div class="tech-name">Telemedicine Platform</div>
+          <div class="tech-desc">Secure video consultations with our specialists from the comfort of your home.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ────────────────────────────────────────────────────────── -->
+<div class="cta-section">
+  <h2>Ready to Take Charge of Your Health?</h2>
+  <p>Create a patient account to book appointments, view records, and connect with your care team online.</p>
+  <a href="/login/" class="btn-hero-primary">Get Started — It's Free</a>
+</div>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand-name"> City Hospital</div>
+      <p>Providing compassionate, evidence-based healthcare to our community since 1987. Accredited by the National Healthcare Quality Commission.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Hospital</h4>
+      <a href="#departments">Departments</a>
+      <a href="#doctors">Doctors</a>
+      <a href="#technologies">Medical Technologies</a>
+      <a href="#our-goals">Our Goals</a>
+    </div>
+    <div class="footer-col">
+      <h4>Information</h4>
+      <a href="#patient-rights">Patient Rights</a>
+      <a href="#news">News</a>
+      <a href="#videos">Videos</a>
+      <a href="#contracted-institutions">Contracted Institutions</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 City Hospital. All rights reserved.</span>
+    <span>Emergency: <strong style="color:white">+1 (800) 555-0100</strong></span>
+    <a href="/staff/login/" style="color:rgba(255,255,255,0.4);font-size:0.8rem;text-decoration:none;transition:color 0.15s;"
+       onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">
+      Staff Login
+    </a>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navMenu').classList.toggle('open');
+  }
+
+  document.addEventListener('click', function(e) {
+    const menu = document.getElementById('navMenu');
+    if (!menu.contains(e.target)) menu.classList.remove('open');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Staff Login — Hospital Platform</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #1a5276;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+      padding: 48px 52px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .logo .icon {
+      font-size: 2.4rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .logo h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1a5276;
+    }
+    .logo p {
+      font-size: 0.82rem;
+      color: #7f8c8d;
+      margin-top: 4px;
+    }
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #dce1e7;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #1c2833;
+      background: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus {
+      border-color: #2980b9;
+      box-shadow: 0 0 0 3px rgba(41,128,185,0.12);
+      background: white;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #1a5276;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #1f618d; }
+    .alert {
+      padding: 10px 14px;
+      border-radius: 7px;
+      font-size: 0.88rem;
+      margin-bottom: 18px;
+      background: #fdecea;
+      color: #c0392b;
+      border: 1px solid #f5b7b1;
+    }
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 22px;
+      font-size: 0.85rem;
+      color: #7f8c8d;
+      text-decoration: none;
+    }
+    .back:hover { color: #1a5276; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <span class="icon"></span>
+    <h1>Staff Portal</h1>
+    <p>Hospital Management Platform — Staff Access</p>
+  </div>
+
+  {% if error %}
+    <div class="alert">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST" action="/staff/login/">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email"
+             placeholder="you@hospital.com" required
+             value="{{ email|default:'' }}"/>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password"
+             placeholder="••••••••" required/>
+    </div>
+    <button type="submit" class="btn">Sign In to Staff Portal</button>
+  </form>
+
+  <a class="back" href="/">← Back to home</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/python manage.py makemigrations accounts)",
+      "Bash(.venv/bin/python manage.py migrate)",
+      "Bash(.venv/bin/python manage.py startapp records apps/records)",
+      "Bash(.venv/bin/python manage.py makemigrations records)",
+      "Bash(.venv/bin/python manage.py makemigrations)",
+      "Bash(.venv/bin/python manage.py check)",
+      "Bash(python3 -)",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}

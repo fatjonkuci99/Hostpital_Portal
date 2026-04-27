@@ -1,0 +1,172 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Manage Schedule{% endblock %}
+{% block page_title %}Manage Schedule{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <span class="icon"></span>
+    <span>Hospital Platform</span>
+  </div>
+  <div class="sidebar-role">Doctor Portal</div>
+
+  <a class="nav-item" href="/dashboard/">
+    <span class="nav-icon"></span> Overview
+  </a>
+  <a class="nav-item" href="/doctor/appointments/">
+    <span class="nav-icon"></span> Appointments
+  </a>
+  <a class="nav-item active" href="/doctor/schedule/">
+    <span class="nav-icon"></span> Manage Schedule
+  </a>
+
+  <div class="sidebar-bottom">
+    <a class="nav-item" href="/logout/">
+      <span class="nav-icon"></span> Sign Out
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+
+<div class="greeting">
+  <h2>Manage Schedule</h2>
+  <p>Select a day to block or unblock individual time slots.</p>
+</div>
+
+<!-- Date picker -->
+<div class="section-card" style="margin-bottom:24px;">
+  <div class="section-header">Select a Date</div>
+  <div class="section-body">
+    <form method="GET" action="/doctor/schedule/" id="date-form">
+      <input type="text" id="date-picker" name="date" placeholder="Click to pick a date…"
+             value="{% if selected_date %}{{ selected_date|date:'Y-m-d' }}{% endif %}"
+             style="width:100%;max-width:320px;padding:10px 14px;border:1.5px solid var(--border);
+                    border-radius:8px;font-size:0.95rem;background:#f8fafc;outline:none;cursor:pointer;"/>
+    </form>
+  </div>
+</div>
+
+{% if error %}
+  <div style="background:#fdecea;color:#c0392b;border:1px solid #f5b7b1;
+              padding:12px 16px;border-radius:8px;margin-bottom:20px;font-size:0.9rem;">
+    {{ error }}
+  </div>
+{% endif %}
+
+{% if selected_date and all_slots %}
+<div class="section-card">
+  <div class="section-header">
+    Slots — {{ selected_date|date:"l, j F Y" }}
+    <span style="font-size:0.78rem;font-weight:400;color:var(--muted);">
+      Click a slot to block or unblock it
+    </span>
+  </div>
+  <div class="section-body">
+
+    <!-- Legend -->
+    <div style="display:flex;gap:20px;margin-bottom:20px;font-size:0.82rem;">
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span style="width:14px;height:14px;border-radius:4px;background:#eafaf1;border:1.5px solid #a9dfbf;display:inline-block;"></span>
+        Available
+      </span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span style="width:14px;height:14px;border-radius:4px;background:#fdecea;border:1.5px solid #f5b7b1;display:inline-block;"></span>
+        Blocked by you
+      </span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span style="width:14px;height:14px;border-radius:4px;background:#d6eaf8;border:1.5px solid #aed6f1;display:inline-block;"></span>
+        Booked by patient
+      </span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;">
+      {% for slot in all_slots %}
+        {% if slot.booked %}
+          <!-- Booked by patient — not toggleable -->
+          <div style="text-align:center;padding:10px 8px;border-radius:8px;font-size:0.92rem;
+                      font-weight:600;background:#d6eaf8;border:1.5px solid #aed6f1;color:#1a5276;">
+            {{ slot.dt|date:"H:i" }}
+            <div style="font-size:0.7rem;font-weight:400;margin-top:2px;color:#5d8aa8;">Booked</div>
+          </div>
+        {% else %}
+          <!-- Toggleable slot -->
+          <form method="POST" action="/doctor/schedule/">
+            {% csrf_token %}
+            <input type="hidden" name="date" value="{{ selected_date|date:'Y-m-d' }}"/>
+            <input type="hidden" name="slot" value="{{ slot.dt|date:'Y-m-d H:i:s' }}"/>
+            <button type="submit" class="toggle-slot {% if slot.blocked %}is-blocked{% else %}is-available{% endif %}">
+              {{ slot.dt|date:"H:i" }}
+              <span class="slot-label">{% if slot.blocked %}Blocked{% else %}Available{% endif %}</span>
+            </button>
+          </form>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% elif selected_date and not error %}
+  <div style="text-align:center;padding:40px;color:var(--muted);">
+    No slots found for this date.
+  </div>
+{% endif %}
+
+<style>
+  .toggle-slot {
+    width: 100%;
+    text-align: center;
+    padding: 10px 8px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .toggle-slot:hover { opacity: 0.85; transform: scale(0.98); }
+  .toggle-slot:active { transform: scale(0.96); }
+
+  .toggle-slot.is-available {
+    background: #eafaf1;
+    border-color: #a9dfbf;
+    color: #1e8449;
+  }
+  .toggle-slot.is-blocked {
+    background: #fdecea;
+    border-color: #f5b7b1;
+    color: #c0392b;
+  }
+  .slot-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .flatpickr-day.flatpickr-disabled {
+    color: #ccc !important;
+    background: #f5f5f5 !important;
+    cursor: not-allowed !important;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  const availableWeekdays = {{ available_weekdays_js }};
+
+  flatpickr('#date-picker', {
+    dateFormat: 'Y-m-d',
+    disableMobile: true,
+    disable: [
+      function(d) {
+        return !availableWeekdays.includes(d.getDay());
+      }
+    ],
+    onChange: function(selectedDates, dateStr) {
+      document.getElementById('date-form').submit();
+    }
+  });
+</script>
+{% endblock %}

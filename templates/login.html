@@ -1,0 +1,282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hospital Platform — Login</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── Left panel ── */
+    .panel-left {
+      width: 45%;
+      background: linear-gradient(160deg, #1a5276 0%, #1f618d 60%, #2980b9 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 50px;
+      color: white;
+    }
+    .panel-left .logo { font-size: 2.8rem; margin-bottom: 12px; }
+    .panel-left h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .panel-left p {
+      font-size: 1rem;
+      opacity: 0.8;
+      text-align: center;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+    .back-home {
+      margin-top: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.15s;
+    }
+    .back-home:hover { color: white; }
+
+    /* ── Right panel ── */
+    .panel-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 44px 48px;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      margin-bottom: 32px;
+      border-bottom: 2px solid #e8ecf0;
+    }
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      padding: 10px 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #7f8c8d;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+    }
+    .tab-btn.active { color: #1a5276; }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 2px;
+      background: #1a5276;
+      border-radius: 2px;
+    }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Form ── */
+    .form-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1c2833;
+      margin-bottom: 6px;
+    }
+    .form-subtitle {
+      font-size: 0.85rem;
+      color: #7f8c8d;
+      margin-bottom: 28px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #dce1e7;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #1c2833;
+      background: #f8fafc;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: #2980b9;
+      box-shadow: 0 0 0 3px rgba(41,128,185,0.12);
+      background: white;
+    }
+    .form-row { display: flex; gap: 14px; }
+    .form-row .form-group { flex: 1; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: #1a5276;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: #1f618d; }
+
+    /* ── Alert ── */
+    .alert {
+      padding: 10px 14px;
+      border-radius: 7px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+    }
+    .alert-error   { background: #fdecea; color: #c0392b; border: 1px solid #f5b7b1; }
+    .alert-success { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+
+    @media (max-width: 768px) {
+      .panel-left { display: none; }
+      .card { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Left branding panel ── -->
+<div class="panel-left">
+  <div class="logo"></div>
+  <h1>Hospital Management Platform</h1>
+  <p>A secure, all-in-one system for patients, doctors, and hospital staff.</p>
+  <a class="back-home" href="/">&#8592; Back to home</a>
+</div>
+
+<!-- ── Right form panel ── -->
+<div class="panel-right">
+  <div class="card">
+
+    <div class="tabs">
+      <button type="button" class="tab-btn {% if tab == 'login' or not tab %}active{% endif %}"
+              onclick="switchTab('login')">Sign In</button>
+      <button type="button" class="tab-btn {% if tab == 'register' %}active{% endif %}"
+              onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- ── LOGIN ── -->
+    <div id="tab-login" class="tab-pane {% if tab == 'login' or not tab %}active{% endif %}">
+      <div class="form-title">Welcome back</div>
+      <div class="form-subtitle">Sign in to your account to continue</div>
+
+      {% if login_error %}
+        <div class="alert alert-error">{{ login_error }}</div>
+      {% endif %}
+
+      <form method="POST" action="/login/">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="login"/>
+        <div class="form-group">
+          <label for="login-email">Email address</label>
+          <input type="email" id="login-email" name="email"
+                 placeholder="you@hospital.com" required
+                 value="{{ login_email|default:'' }}"/>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password"
+                 placeholder="••••••••" required/>
+        </div>
+        <button type="submit" class="btn-primary">Sign In</button>
+      </form>
+    </div>
+
+    <!-- ── REGISTER ── -->
+    <div id="tab-register" class="tab-pane {% if tab == 'register' %}active{% endif %}">
+      <div class="form-title">Create account</div>
+      <div class="form-subtitle">Patient self-registration. Staff accounts are created by admins.</div>
+
+      {% if register_error %}
+        <div class="alert alert-error">{{ register_error }}</div>
+      {% endif %}
+
+      <form method="POST" action="/login/">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="register"/>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="reg-first">First name</label>
+            <input type="text" id="reg-first" name="first_name"
+                   placeholder="Jane" required
+                   value="{{ reg_first|default:'' }}"/>
+          </div>
+          <div class="form-group">
+            <label for="reg-last">Last name</label>
+            <input type="text" id="reg-last" name="last_name"
+                   placeholder="Smith" required
+                   value="{{ reg_last|default:'' }}"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="reg-email">Email address</label>
+          <input type="email" id="reg-email" name="email"
+                 placeholder="you@example.com" required
+                 value="{{ reg_email|default:'' }}"/>
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" name="password"
+                 placeholder="Min. 8 characters" required minlength="8"/>
+        </div>
+        <div class="form-group">
+          <label for="reg-password2">Confirm password</label>
+          <input type="password" id="reg-password2" name="password2"
+                 placeholder="Repeat password" required/>
+        </div>
+        <button type="submit" class="btn-primary">Create Account</button>
+      </form>
+    </div>
+
+  </div><!-- /card -->
+</div><!-- /panel-right -->
+
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) =>
+      b.classList.toggle('active', (i === 0) === (tab === 'login')));
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  }
+</script>
+</body>
+</html>

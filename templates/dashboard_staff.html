@@ -1,0 +1,198 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Staff Dashboard — Hospital Platform{% endblock %}
+{% block page_title %}Hospital Staff Dashboard{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <span class="icon"></span>
+    <span>Hospital Platform</span>
+  </div>
+  <div class="sidebar-role">
+    {% if user.role == 'nurse' %}Nursing Portal
+    {% elif user.role == 'receptionist' %}Reception Portal
+    {% elif user.role == 'admin' %}Admin Portal
+    {% else %}Staff Portal{% endif %}
+  </div>
+
+  <a class="nav-item active" href="#">
+    <span class="nav-icon"></span> Overview
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> All Appointments
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Patients
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Doctors
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Departments
+  </a>
+  {% if user.role == 'admin' %}
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Staff Management
+  </a>
+  {% endif %}
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Billing
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Reports
+  </a>
+
+  <div class="sidebar-bottom">
+    <a class="nav-item" href="/logout/">
+      <span class="nav-icon"></span> Sign Out
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="greeting">
+  <h2>Good morning, {{ user.first_name }} </h2>
+  <p>Here's today's hospital overview.</p>
+</div>
+
+<!-- Stats row -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Appointments Today</div>
+    <div class="stat-value">38</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Occupied Beds</div>
+    <div class="stat-value">74<span style="font-size:1rem;color:var(--muted)">/120</span></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Doctors On Duty</div>
+    <div class="stat-value">12</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">New Patients Today</div>
+    <div class="stat-value">6</div>
+  </div>
+</div>
+
+<!-- Today's appointments -->
+<div class="section-card">
+  <div class="section-header">
+    Today's Appointments — All Departments
+    <button class="btn btn-primary btn-sm">+ New Appointment</button>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr>
+          <th>Patient</th><th>Doctor</th><th>Department</th>
+          <th>Time</th><th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Elena Vasquez</strong></td>
+          <td>Dr. Mitchell</td><td>Cardiology</td>
+          <td>09:00 AM</td>
+          <td><span class="badge badge-green">Completed</span></td>
+          <td><button class="btn btn-outline btn-sm">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>Marco Rossi</strong></td>
+          <td>Dr. Mitchell</td><td>Cardiology</td>
+          <td>10:00 AM</td>
+          <td><span class="badge badge-blue">In Progress</span></td>
+          <td><button class="btn btn-outline btn-sm">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>Hiroshi Tanaka</strong></td>
+          <td>Dr. Okafor</td><td>General Practice</td>
+          <td>10:30 AM</td>
+          <td><span class="badge badge-orange">Waiting</span></td>
+          <td><button class="btn btn-outline btn-sm">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>Lena Fischer</strong></td>
+          <td>Dr. Patel</td><td>Neurology</td>
+          <td>11:00 AM</td>
+          <td><span class="badge badge-orange">Waiting</span></td>
+          <td><button class="btn btn-outline btn-sm">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>Carlos Mendez</strong></td>
+          <td>Dr. Okafor</td><td>General Practice</td>
+          <td>11:30 AM</td>
+          <td><span class="badge badge-red">Cancelled</span></td>
+          <td><button class="btn btn-outline btn-sm">Rebook</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Two-column row -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+  <!-- Department occupancy -->
+  <div class="section-card">
+    <div class="section-header">Department Occupancy</div>
+    <div class="section-body">
+      <table>
+        <thead>
+          <tr><th>Department</th><th>Beds Used</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Cardiology</td><td>18 / 24</td><td><span class="badge badge-orange">75%</span></td></tr>
+          <tr><td>General Practice</td><td>12 / 30</td><td><span class="badge badge-green">40%</span></td></tr>
+          <tr><td>Neurology</td><td>10 / 16</td><td><span class="badge badge-orange">62%</span></td></tr>
+          <tr><td>Oncology</td><td>22 / 24</td><td><span class="badge badge-red">92%</span></td></tr>
+          <tr><td>Pediatrics</td><td>12 / 26</td><td><span class="badge badge-green">46%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Billing queue -->
+  <div class="section-card">
+    <div class="section-header">Billing Queue</div>
+    <div class="section-body">
+      <table>
+        <thead>
+          <tr><th>Patient</th><th>Amount</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Elena Vasquez</td><td>$120.00</td>
+            <td><span class="badge badge-green">Paid</span></td>
+          </tr>
+          <tr>
+            <td>Marco Rossi</td><td>$240.00</td>
+            <td><span class="badge badge-orange">Pending</span></td>
+          </tr>
+          <tr>
+            <td>Lena Fischer</td><td>$180.00</td>
+            <td><span class="badge badge-orange">Pending</span></td>
+          </tr>
+          <tr>
+            <td>Hiroshi Tanaka</td><td>$95.00</td>
+            <td><span class="badge badge-red">Overdue</span></td>
+          </tr>
+          <tr>
+            <td>Priya Sharma</td><td>$150.00</td>
+            <td><span class="badge badge-green">Paid</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_script %}{% endblock %}

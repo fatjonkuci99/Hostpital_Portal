@@ -1,0 +1,172 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Doctor Dashboard — Hospital Platform{% endblock %}
+{% block page_title %}Doctor Dashboard{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <span class="icon"></span>
+    <span>Hospital Platform</span>
+  </div>
+  <div class="sidebar-role">Doctor Portal</div>
+
+  <a class="nav-item active" href="#">
+    <span class="nav-icon"></span> Overview
+  </a>
+  <a class="nav-item" href="/doctor/appointments/">
+    <span class="nav-icon"></span> Appointments
+  </a>
+  <a class="nav-item" href="/doctor/schedule/">
+    <span class="nav-icon"></span> Manage Schedule
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> My Patients
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Consultations
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Prescriptions
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> Lab Orders
+  </a>
+  <a class="nav-item" href="#">
+    <span class="nav-icon"></span> My Profile
+  </a>
+
+  <div class="sidebar-bottom">
+    <a class="nav-item" href="/logout/">
+      <span class="nav-icon"></span> Sign Out
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="greeting">
+  <h2>Good morning, Dr. {{ user.last_name }} </h2>
+  <p>You have <strong>5 appointments</strong> scheduled today.</p>
+</div>
+
+<!-- Stats row -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Today's Appointments</div>
+    <div class="stat-value">5</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Total Patients</div>
+    <div class="stat-value">142</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Pending Reviews</div>
+    <div class="stat-value">3</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"></div>
+    <div class="stat-label">Prescriptions Today</div>
+    <div class="stat-value">7</div>
+  </div>
+</div>
+
+<!-- Today's queue -->
+<div class="section-card">
+  <div class="section-header">
+    Today's Patient Queue
+    <button class="btn btn-outline btn-sm">Manage Schedule</button>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Patient</th><th>Time</th><th>Reason</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--muted)">1</td>
+          <td><strong>Elena Vasquez</strong></td>
+          <td>09:00 AM</td>
+          <td>Follow-up — hypertension</td>
+          <td><span class="badge badge-green">Completed</span></td>
+          <td><button class="btn btn-outline btn-sm">View Notes</button></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">2</td>
+          <td><strong>Marco Rossi</strong></td>
+          <td>10:00 AM</td>
+          <td>Chest pain assessment</td>
+          <td><span class="badge badge-blue">In Progress</span></td>
+          <td><button class="btn btn-primary btn-sm">Open Record</button></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">3</td>
+          <td><strong>Aisha Nkrumah</strong></td>
+          <td>11:00 AM</td>
+          <td>Annual check-up</td>
+          <td><span class="badge badge-orange">Waiting</span></td>
+          <td><button class="btn btn-outline btn-sm">View</button></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">4</td>
+          <td><strong>Tom Bergmann</strong></td>
+          <td>02:00 PM</td>
+          <td>Lab result review</td>
+          <td><span class="badge badge-orange">Waiting</span></td>
+          <td><button class="btn btn-outline btn-sm">View</button></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">5</td>
+          <td><strong>Priya Sharma</strong></td>
+          <td>03:30 PM</td>
+          <td>New patient intake</td>
+          <td><span class="badge badge-orange">Waiting</span></td>
+          <td><button class="btn btn-outline btn-sm">View</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Pending lab results -->
+<div class="section-card">
+  <div class="section-header">
+    Pending Lab Results to Review
+  </div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr><th>Patient</th><th>Test</th><th>Ordered</th><th>Result</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Elena Vasquez</strong></td>
+          <td>Lipid Panel</td>
+          <td>Apr 10, 2026</td>
+          <td><span class="badge badge-red">Flagged</span></td>
+          <td><button class="btn btn-primary btn-sm">Review</button></td>
+        </tr>
+        <tr>
+          <td><strong>Tom Bergmann</strong></td>
+          <td>HbA1c</td>
+          <td>Apr 11, 2026</td>
+          <td><span class="badge badge-green">Normal</span></td>
+          <td><button class="btn btn-outline btn-sm">Review</button></td>
+        </tr>
+        <tr>
+          <td><strong>Priya Sharma</strong></td>
+          <td>Complete Blood Count</td>
+          <td>Apr 12, 2026</td>
+          <td><span class="badge badge-orange">Pending</span></td>
+          <td><button class="btn btn-outline btn-sm" disabled>Awaiting</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}{% endblock %}

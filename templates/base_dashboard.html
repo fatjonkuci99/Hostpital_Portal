@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Hospital Platform{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-w: 240px;
+      --header-h:  64px;
+      --primary:   #1a5276;
+      --primary-light: #2980b9;
+      --accent:    #1abc9c;
+      --bg:        #f0f4f8;
+      --card:      #ffffff;
+      --text:      #1c2833;
+      --muted:     #7f8c8d;
+      --border:    #dce1e7;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--primary);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      padding: 22px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .sidebar-logo .icon { font-size: 1.6rem; }
+    .sidebar-logo span  { color: white; font-weight: 700; font-size: 1rem; }
+
+    .sidebar-role {
+      padding: 14px 20px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.45);
+      font-weight: 600;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.92rem;
+      transition: background 0.15s, color 0.15s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover, .nav-item.active {
+      background: rgba(255,255,255,0.12);
+      color: white;
+    }
+    .nav-item .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding: 12px 0;
+    }
+
+    /* ── Main area ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── Top header ── */
+    header {
+      height: var(--header-h);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 16px;
+      position: sticky; top: 0;
+      z-index: 50;
+    }
+    .header-title { font-size: 1.15rem; font-weight: 700; flex: 1; }
+    .header-user  {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.9rem; color: var(--muted);
+    }
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+    }
+
+    /* ── Content ── */
+    .content { padding: 28px; flex: 1; }
+
+    /* ── Cards ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 20px 22px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .stat-card .stat-icon {
+      font-size: 1.8rem;
+      margin-bottom: 4px;
+    }
+    .stat-card .stat-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .stat-card .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .section-card {
+      background: var(--card);
+      border-radius: 10px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+    .section-header {
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-body { padding: 18px 22px; }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-green  { background: #d5f5e3; color: #1e8449; }
+    .badge-blue   { background: #d6eaf8; color: #1a5276; }
+    .badge-orange { background: #fdebd0; color: #d35400; }
+    .badge-red    { background: #fdecea; color: #c0392b; }
+
+    /* ── Button ── */
+    .btn {
+      padding: 8px 18px;
+      border-radius: 7px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); }
+    .btn-sm { padding: 5px 12px; font-size: 0.8rem; }
+
+    /* ── Greeting ── */
+    .greeting {
+      margin-bottom: 24px;
+    }
+    .greeting h2 { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .greeting p  { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+{% block sidebar %}{% endblock %}
+
+<div class="main">
+  <header>
+    <div class="header-title">{% block page_title %}Dashboard{% endblock %}</div>
+    <div class="header-user">
+      <div>
+        <div style="font-weight:600;color:#1c2833">{{ user.full_name }}</div>
+        <div style="font-size:0.78rem">{{ user.role|upper }}</div>
+      </div>
+      <div class="avatar">{{ user.first_name|first|upper }}</div>
+    </div>
+  </header>
+
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+</div>
+
+{% block extra_script %}{% endblock %}
+</body>
+</html>

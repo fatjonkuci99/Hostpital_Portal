@@ -1,0 +1,98 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}My Appointments{% endblock %}
+{% block page_title %}My Appointments{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <span class="icon"></span>
+    <span>Hospital Platform</span>
+  </div>
+  <div class="sidebar-role">Patient Portal</div>
+
+  <a class="nav-item" href="/dashboard/">
+    <span class="nav-icon"></span> Overview
+  </a>
+  <a class="nav-item" href="/book/">
+    <span class="nav-icon"></span> Book Appointment
+  </a>
+  <a class="nav-item active" href="/appointments/">
+    <span class="nav-icon"></span> My Appointments
+  </a>
+
+  <div class="sidebar-bottom">
+    <a class="nav-item" href="/logout/">
+      <span class="nav-icon"></span> Sign Out
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="greeting">
+  <h2>My Appointments</h2>
+  <p>View and manage all your appointments.</p>
+</div>
+
+<div style="margin-bottom:20px;text-align:right;">
+  <a href="/book/" class="btn btn-primary">+ Book New Appointment</a>
+</div>
+
+{% if not appointments %}
+  <div class="section-card">
+    <div class="section-body" style="text-align:center;padding:48px;color:var(--muted);">
+      You have no appointments yet.
+      <br/><br/>
+      <a href="/book/" class="btn btn-primary">Book your first appointment</a>
+    </div>
+  </div>
+{% else %}
+  <div class="section-card">
+    <div class="section-body" style="padding:0;">
+      <table>
+        <thead>
+          <tr>
+            <th>Doctor</th>
+            <th>Date & Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in appointments %}
+          <tr>
+            <td><strong>Dr. {{ appt.doctor.full_name }}</strong></td>
+            <td>{{ appt.date_time|date:"j M Y — H:i" }}</td>
+            <td style="color:var(--muted);">{{ appt.reason }}</td>
+            <td>
+              {% if appt.status == 'pending' %}
+                <span class="badge badge-orange">Pending</span>
+              {% elif appt.status == 'confirmed' %}
+                <span class="badge badge-green">Confirmed</span>
+              {% elif appt.status == 'cancelled' %}
+                <span class="badge badge-red">Cancelled</span>
+              {% elif appt.status == 'completed' %}
+                <span class="badge badge-blue">Completed</span>
+              {% elif appt.status == 'no_show' %}
+                <span class="badge" style="background:#f5eef8;color:#7d3c98;">No Show</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if appt.status == 'pending' or appt.status == 'confirmed' %}
+                <form method="POST" action="/appointments/{{ appt.pk }}/cancel/"
+                      onsubmit="return confirm('Cancel this appointment?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline btn-sm">Cancel</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
